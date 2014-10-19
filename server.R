@@ -3,11 +3,14 @@ library(ggplot2)
 library(scales)
 shinyServer(function(input, output) {
 ## determine baseline payment and interest total
-n <- term * 12
-int <- apr / 1200
-per.down <- per.down / 100
+price <- as.numeric(input$price)
+per.down <- input$per.down / 100
+int <- input$apr / 1200
+n <- input$term * 12
 base.monthly.payment <- (int * price * (1 - per.down) * ((1 + int)^n)) / (((1 + int)^n) - 1)
+output$base.monthly.payment <- renderprint({base.monthly.payment})
 base.total.interest <- (base.monthly.payment * n) - (price * (1 - per.down))
+output$base.total.interest <- renderprint({base.total.interest})
 ## create dataframe to populate with increments of additional payment
 schedule <- data.frame(matrix(data = NA, nrow = 41, ncol = 6, 
                          dimnames = list(1:41, c("add", "add.n",
@@ -24,6 +27,9 @@ for (i in seq(0, 1000, 25)) {
       schedule$early[c] <- round(n - schedule$add.n[c], digits = 0)
       c <- c + 1
 }
+add <- input$add
+output$savings <- renderprint({schedule$savings[which(schedule$add = add)]})
+output$early <- renderprint({schedule$early[which(schedule$add = add)]})
 ## create data.frame suitable for plotting
 graph.data <- data.frame(matrix(data = NA, nrow = 82, ncol = 3, 
                                 dimnames = list(1:82, c("add", "amount", "type"))))
@@ -39,7 +45,9 @@ for (i in seq(0, 1000, 25)) {
 }
 })
 ## create plot of amoritization with line for additional principal amount
-plot <- ggplot(graph.data, aes(x = add, y = amount), color = type)
+output$plot <- rednerPlot({
+add <- input$add
+ggplot(graph.data, aes(x = add, y = amount), color = type)
 + geom_area(aes(fill = type), position = 'stack', alpha = 0.75)
 + geom_vline(xintercept = add, color="black", linetype = "longdash", size = 1)
 + labs(x = "Additional Principal/Month", y = "Total Cost")
@@ -57,3 +65,4 @@ plot <- ggplot(graph.data, aes(x = add, y = amount), color = type)
         panel.grid.minor.x = element_blank())
 + scale_x_continuous(labels = dollar)
 + scale_y_continuous(labels = dollar)
+})
