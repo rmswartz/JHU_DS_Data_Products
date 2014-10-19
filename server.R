@@ -4,7 +4,8 @@ library(scales)
 shinyServer(function(input, output) {
 ## determine baseline payment and interest total
 n <- term * 12
-int <- apr / 12
+int <- apr / 1200
+per.down <- per.down / 100
 base.monthly.payment <- (int * price * (1 - per.down) * ((1 + int)^n)) / (((1 + int)^n) - 1)
 base.total.interest <- (base.monthly.payment * n) - (price * (1 - per.down))
 ## create dataframe to populate with increments of additional payment
