@@ -2,10 +2,8 @@ library(shiny)
 shinyUI(
       pageWithSidebar(
       headerPanel(
-            h1('Amoritization Simulator for Home Mortgages'),
-            p('Use this tool to determine your monthly mortgage payment, 
-              how much interest you will owe over the life of the loan, and how 
-              you can reduce that amount with additional payment')
+            h1('Amoritization Simulator for Home Mortgages'), 
+            windowTitle = "Amoritization Simulator"
       ),
       sidebarPanel(
             h3('Mortgage Information'),
@@ -27,6 +25,9 @@ shinyUI(
             ),
       mainPanel(
             h3('Payment and Amoritization Simulation'),
+            p('Use this tool to determine your monthly mortgage payment, 
+              how much interest you will owe over the life of the loan, and how 
+              you can reduce that amount with additional payment'),
             h4('Monthly Payment (Principal and Interest)'),
             p('This is the amount (in $USD) you would pay each month for a 
               mortgage under the terms you defined'),
