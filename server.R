@@ -1,4 +1,6 @@
 library(shiny)
+library(ggplot2)
+library(scales)
 shinyServer(function(input, output) {
 ## determine baseline payment and interest total
 n <- term * 12
@@ -35,6 +37,22 @@ for (i in seq(0, 1000, 25)) {
       c <- c + 2
 }
 })
-## create plot of amoritization
-library(rCharts)
-plot <- nPlot(amount ~ add, group = 'type', data = graph.data, type = 'line')
+## create plot of amoritization with line for additional principal amount
+plot <- ggplot(graph.data, aes(x = add, y = amount), color = type)
++ geom_area(aes(fill = type), position = 'stack', alpha = 0.75)
++ geom_vline(xintercept = add, color="black", linetype = "longdash", size = 1)
++ labs(x = "Additional Principal/Month", y = "Total Cost")
++ scale_fill_manual(values=c("firebrick3", "dodgerblue3"), name = "Payment Component")
++ theme(axis.title.x = element_text(face = "bold", vjust = -0.7, size = 16), 
+        axis.title.y = element_text(face = "bold", vjust = 2, size = 16),
+        axis.text.x = element_text(size = 14), 
+        axis.text.y = element_text(size = 14), 
+        panel.margin = unit(c(5, 5, 5, 5), "mm"),
+        plot.margin = unit(c(5, 5, 5, 5), "mm"),
+        panel.background = element_blank(),
+        panel.grid.major.y = element_line(colour = "gray"),
+        panel.grid.minor.y = element_line(colour = "gray86"),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank())
++ scale_x_continuous(labels = dollar)
++ scale_y_continuous(labels = dollar)
