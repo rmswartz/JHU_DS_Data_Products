@@ -19,8 +19,8 @@ shinyUI(
               as an Annual Percentage Rate (APR)'),
             sliderInput('apr', "APR", value = 4, min = 0, max = 8, step = 0.125),
             h4('Term Length (Years)'),
-            p('Use the buttons to define the term of the loan'),
-            radioButtons('term', "Loan Term (Years)", choices = c(15, 30), selected = 30),
+            p('Use the slider to define the term of the loan'),
+            sliderInput('term', "Loan Term Years", value = 30, min = 15, max = 30, step = 1),
             submitButton('Calculate')
             ),
       mainPanel(
