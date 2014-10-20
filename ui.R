@@ -21,7 +21,7 @@ shinyUI(
             h4('Term Length (Years)'),
             p('Use the slider to define the term of the loan'),
             sliderInput('term', "Loan Term Years", value = 30, min = 15, max = 30, step = 1),
-            submitButton('Calculate')
+            submitButton("Calculate")
             ),
       mainPanel(
             h3('Payment and Amoritization Simulation'),

@@ -23,34 +23,34 @@ schedule <- reactive({
 ## initialize 'for' loop to populate possible amoritization totals
 c <- 1
 for (i in seq(0, 1000, 25)) {
-      schedule$add.amt[c] <- i
-      schedule$add.n[c] <- log(((base.monthly.payment() + i) / rate()) / (((base.monthly.payment() + i) / rate()) - (price() * (1 - per.down())))) / log(1 + rate())
-      schedule$prin[c] <- round(price() * (1 - per.down()), digits = 2)
-      schedule$add.total.interest[c] <- round(((base.monthly.payment() + i) * schedule$add.n[c]) - schedule$prin[c], digits = 2)
-      schedule$savings[c] <- round(base.total.interest() - schedule$add.total.interest[c], digits = 2)
-      schedule$early[c] <- round(n() - schedule$add.n[c], digits = 0)
+      schedule()$add.amt[c] <- i
+      schedule()$add.n[c] <- log(((base.monthly.payment() + i) / rate()) / (((base.monthly.payment() + i) / rate()) - (price() * (1 - per.down())))) / log(1 + rate())
+      schedule()$prin[c] <- round(price() * (1 - per.down()), digits = 2)
+      schedule()$add.total.interest[c] <- round(((base.monthly.payment() + i) * schedule()$add.n[c]) - schedule()$prin[c], digits = 2)
+      schedule()$savings[c] <- round(base.total.interest() - schedule()$add.total.interest[c], digits = 2)
+      schedule()$early[c] <- round(n() - schedule()$add.n[c], digits = 0)
       c <- c + 1
 }
 add <- reactive({as.numeric(input$add)})
-output$savings <- renderPrint({schedule$savings[which(schedule$add.amt == add())]})
-output$early <- renderPrint({schedule$early[which(schedule$add.amt == add())]})
+output$savings <- renderPrint({schedule()$savings[which(schedule()$add.amt == add())]})
+output$early <- renderPrint({schedule()$early[which(schedule()$add.amt == add())]})
 ## create data.frame suitable for plotting
 graph.data <- reactive({
       data.frame(matrix(data = NA, nrow = 82, ncol = 3, dimnames = list(1:82, c("extra.prin", "amount", "type"))))
 })
 c <- 1
 for (i in seq(0, 1000, 25)) {
-      graph.data$extra.prin[c] <- i
-      graph.data$extra.prin[c + 1] <- i
-      graph.data$amount[c] <- schedule$prin[which(schedule$add.amt == i)]
-      graph.data$amount[c + 1] <- schedule$add.total.interest[which(schedule$add.amt == i)]
-      graph.data$type[c] <- "Principal" 
-      graph.data$type[c + 1] <- "Interest"
+      graph.data()$extra.prin[c] <- i
+      graph.data()$extra.prin[c + 1] <- i
+      graph.data()$amount[c] <- schedule$prin[which(schedule$add.amt == i)]
+      graph.data()$amount[c + 1] <- schedule$add.total.interest[which(schedule$add.amt == i)]
+      graph.data()$type[c] <- "Principal" 
+      graph.data()$type[c + 1] <- "Interest"
       c <- c + 2
 }
 ## create plot of amoritization with line for additional principal amount
 output$plot <- renderPlot({
-ggplot(graph.data(), aes(x = extra.prin, y = amount), color = type)
+plot <- ggplot(graph.data(), aes(x = extra.prin, y = amount), color = type)
 + geom_area(aes(fill = type), position = 'stack', alpha = 0.75)
 + geom_vline(xintercept = add(), color="black", linetype = "longdash", size = 1)
 + labs(x = "Additional Principal/Month", y = "Total Cost")
@@ -68,5 +68,6 @@ ggplot(graph.data(), aes(x = extra.prin, y = amount), color = type)
         panel.grid.minor.x = element_blank())
 + scale_x_continuous(labels = dollar)
 + scale_y_continuous(labels = dollar)
+print(plot)
 })
 })
