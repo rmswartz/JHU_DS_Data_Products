@@ -9,7 +9,7 @@ shinyUI(
             h3('Mortgage Information'),
             h4('Purchase Price'),
             p('Enter the total sale price of the home'),
-            textInput('price', "Sale Price ($USD)", value = ""),
+            textInput('price', "Sale Price ($USD)", value = "250000"),
             h4('Percent Down Payment'),
             p('Use the slider to select the percent of the purchase price you 
               intend to pay as a down payment at the time of purchase'),
@@ -20,8 +20,7 @@ shinyUI(
             sliderInput('apr', "APR", value = 4, min = 0, max = 8, step = 0.125),
             h4('Term Length (Years)'),
             p('Use the slider to define the term of the loan'),
-            sliderInput('term', "Loan Term Years", value = 30, min = 15, max = 30, step = 1),
-            submitButton("Calculate")
+            sliderInput('term', "Loan Term Years", value = 30, min = 15, max = 30, step = 1)
             ),
       mainPanel(
             h3('Payment and Amoritization Simulation'),
