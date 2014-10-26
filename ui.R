@@ -43,7 +43,7 @@ shinyUI(
             sliderInput('add', "Additional Principal ($USD)", value = 250, min = 0, max = 1000, step = 25),
             p('Interest costs saved with this additional principal (in $USD)'),
             verbatimTextOutput("savings"),
-            p('You will also pay the loan off the loan this many months early'),
+            p('You will also pay the loan off this many months early'),
             verbatimTextOutput("early"),
             plotOutput('plot')
             )
